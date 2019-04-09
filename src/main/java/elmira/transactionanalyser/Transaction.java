@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class Transaction {
+public class Transaction implements Comparable<Transaction> {
 
     private String transactionId;
 
@@ -84,5 +84,10 @@ public class Transaction {
                 ", transactionType=" + transactionType +
                 ", relatedTransaction=" + relatedTransaction +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Transaction o) {
+        return getCreateAt().compareTo(o.getCreateAt());
     }
 }

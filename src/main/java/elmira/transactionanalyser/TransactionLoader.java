@@ -44,6 +44,7 @@ public class TransactionLoader {
                 for(int i = 0; i < fields.length; ++i) {
                     headerToIndex.put(fields[i], i);
                 }
+                continue;
             }
 
             if(fields.length != COLUMN_NUMBER && fields.length != COLUMN_NUMBER-1){

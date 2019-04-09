@@ -8,11 +8,11 @@ import java.util.stream.Stream;
 
 public class TimeBasedBalanceAnalyzer implements AccountBalanceAnalyzer {
 
-    List<Transaction> transactions;
+    TreeSet<Transaction> transactions;
     Set<String> reversalTransactionIds;
 
     public TimeBasedBalanceAnalyzer(List<Transaction> transactions) {
-        this.transactions = new ArrayList<>();
+        this.transactions = new TreeSet<>();
         this.transactions.addAll(transactions);
         this.reversalTransactionIds = this.transactions.stream()
                 .filter(t -> t.getTransactionType() == TransactionType.REVERSAL)
@@ -23,7 +23,13 @@ public class TimeBasedBalanceAnalyzer implements AccountBalanceAnalyzer {
     @Override
     public AnalyzerOutput analyse(String accountId, LocalDateTime from, LocalDateTime to) {
 
-        List<Transaction> transactionWindow = transactions.stream()
+        Transaction t1 = new Transaction(null,null,null,from,null,null,null);
+        Transaction t2 = new Transaction(null,null,null,to,null,null,null);
+
+        Transaction tFrom = transactions.higher(t1);
+        Transaction tTo = transactions.lower(t2);
+
+        List<Transaction> transactionWindow = transactions.subSet(tFrom, tTo).stream()
                 .filter(t -> (t.getFromAccountId().equalsIgnoreCase(accountId)
                         || t.getToAccountId().equalsIgnoreCase(accountId))
                         && (t.getCreateAt().isAfter(from)
